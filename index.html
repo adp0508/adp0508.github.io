@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex's Corner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one narrow reading column, left-aligned, sections separated by a mono label + rule */
+  :root {
+    --bg: #f3f5f7;
+    --surface: #ffffff;
+    --fg: #16202b;
+    --muted: #5a6776;
+    --line: #d5dce4;
+    --accent: #2f55c8;
+    --mark: #f2c14e;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10161d; --surface: #18212b; --fg: #e6ebf0; --muted: #98a5b3;
+      --line: #2a3644; --accent: #8fa9ff; --mark: #b98a1e; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10161d; --surface: #18212b; --fg: #e6ebf0; --muted: #98a5b3;
+    --line: #2a3644; --accent: #8fa9ff; --mark: #b98a1e; color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+  .wrap {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 4rem 3rem;
+    display: grid;
+    gap: 3.5rem;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  /* Placeholder text: replace these, then remove the class */
+  .todo {
+    background: color-mix(in srgb, var(--mark) 35%, transparent);
+    border-bottom: 1px dashed var(--mark);
+    padding: 0 0.15em;
+  }
+
+  header { display: grid; gap: 1rem; }
+  .hello {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 9vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 .dot { color: var(--accent); }
+  .tagline { font-size: 1.3rem; color: var(--muted); margin: 0; max-width: 34rem; }
+
+  section { display: grid; gap: 1rem; }
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    margin: 0;
+    text-wrap: balance;
+  }
+  p { margin: 0; }
+
+  .projects { display: grid; gap: 0.75rem; list-style: none; margin: 0; padding: 0; }
+  .project {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 1rem;
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .project h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; margin: 0; }
+  .project .year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); align-self: center; }
+  .project p { grid-column: 1 / -1; color: var(--muted); font-size: 1rem; min-width: 0; }
+
+  .now-meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+  .now-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+
+  .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+
+  footer {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="hello">Hello, I'm</div>
+    <h1>Alex<span class="dot">.</span></h1>
+    <p class="tagline">I like to code</p>
+  </header>
+
+  <section id="about">
+    <div class="label">About</div>
+    <p><span class="todo">A short paragraph about you: what you do, what you're curious about, where you're based (city or region only is plenty).</span></p>
+  </section>
+
+  <section id="projects">
+    <div class="label">Projects</div>
+    <ul class="projects">
+      <li class="project">
+        <h3><span class="todo">Project name</span></h3>
+        <span class="year">2026</span>
+        <p><span class="todo">What it is and why you made it, in one or two lines.</span></p>
+      </li>
+      <li class="project">
+        <h3><span class="todo">Another project</span></h3>
+        <span class="year">2026</span>
+        <p><span class="todo">Anything counts: code, writing, art, a garden, a recipe you perfected.</span></p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="now">
+    <div class="label">Now</div>
+    <h2>What I'm up to</h2>
+    <div class="now-meta">Updated October 2026</div>
+    <ul class="now-list">
+      <li><span class="todo">Something you're working on</span></li>
+      <li><span class="todo">Something you're learning</span></li>
+      <li><span class="todo">Something you're reading, watching or playing</span></li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <div class="label">Elsewhere</div>
+    <div class="contact">
+      <span class="todo">Links you want to share (GitHub, a blog, socials)</span>
+    </div>
+  </section>
+
+  <footer>Made by Alex, with help from Claude. Last edited October 2026.</footer>
+</div>
+
+</body>
+</html>
