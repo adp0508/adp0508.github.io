@@ -61,6 +61,13 @@
   }
 
   header { display: grid; gap: 1rem; }
+  .avatar {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--line);
+  }
   .hello {
     font-family: var(--font-mono);
     font-size: 0.8rem;
@@ -134,6 +141,7 @@
 
 <div class="wrap">
   <header>
+    <img class="avatar" src="images\L&S.jpg" alt ="Photo of L&S">
     <div class="hello">Hello, I'm</div>
     <h1>Alex<span class="dot">.</span></h1>
     <p class="tagline">DID THIS WORK</p>
