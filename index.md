@@ -27,11 +27,6 @@ Line numbers are from 2026-10-25 and will drift as I edit.
 - `<title>` is the text in the browser tab and in bookmarks.
 
 ```html
-<meta name="claude:viewport-fit-sides" content="cover">
-```
-- Left over from when the site was a Claude artifact. It does nothing on GitHub Pages and is safe to delete.
-
-```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=...">
@@ -40,6 +35,8 @@ Line numbers are from 2026-10-25 and will drift as I edit.
   - **Bricolage Grotesque**: headings (the "display" font)
   - **Source Serif 4**: normal paragraph text
   - **JetBrains Mono**: small labels, dates, status pills
+  - **Creepster**: my name, during the Halloween theme only
+- There's also a small `<script>` here for the Halloween theme. See section 10.
 
 ---
 
@@ -109,19 +106,14 @@ a:focus-visible { outline: 2px solid var(--accent); ... }
 
 ---
 
-## 4. Highlights and status pills (lines 57–75)
-
-```css
-.todo { background: color-mix(in srgb, var(--mark) 35%, transparent); border-bottom: 1px dashed var(--mark); ... }
-```
-- The yellow placeholder highlight from the starter page. All placeholders are filled in now, so this rule is unused and safe to delete.
-- `color-mix(... 35%, transparent)` = 35% of the yellow, 65% see-through. That gives a soft tint that also works in dark mode.
+## 4. Status pills (lines 69–80)
 
 ```css
 .status { background: ...var(--mark)...; color: var(--fg); padding: 0.1em 0.5em; border-radius: 999px; font-family: var(--font-mono); font-size: 0.85em; }
 .done { background: color-mix(in srgb, var(--good) 30%, transparent); }
 ```
 - `.status` turns a `<span>` into a pill-shaped label.
+- `color-mix(... 35%, transparent)` = 35% of the yellow, 65% see-through. That gives a soft tint that also works in dark mode.
 - `border-radius: 999px` is a trick: a big number fully rounds the ends.
 - `em` units are relative to the text around the pill, so it scales if the paragraph text changes size.
 - `.done` only changes the background to green. Used together, as in `class="status done"`, the element gets the pill shape from `.status` and the green from `.done`.
@@ -265,6 +257,57 @@ Everything between `<body>` and `</body>` is what visitors actually see.
 
 ### Footer
 - `<footer>` is another meaningful tag, this time for the bottom of the page.
+
+---
+
+## 10. Halloween theme and countdown
+
+The theme turns itself on in October and off in November. Nothing needs to be changed by hand.
+
+### Turning it on (the `<script>` in `<head>`)
+```js
+if (new Date().getMonth() === 9) document.documentElement.classList.add("halloween");
+```
+- `new Date()` gets the current date and time from the visitor's computer.
+- `.getMonth()` returns the month **starting from 0**, so January = 0 and October = 9. This trips up everyone.
+- `document.documentElement` is the `<html>` tag. `.classList.add("halloween")` gives it the class `halloween`, which every Halloween CSS rule looks for.
+- It runs in `<head>`, before the page is drawn, so visitors never see the normal colors flash first.
+- **Controls analogy:** like a bit that's only true in October. Every Halloween style is a rung that checks that bit.
+
+### Halloween colors
+```css
+:root.halloween { --bg: #16101f; --accent: #ff8a1f; ... }
+```
+- `:root.halloween` = "the page, when it has the halloween class." It swaps in purple-black and orange values for the same variables, so the whole site changes without touching any other rule.
+- **Why it comes after the dark mode blocks:** those selectors are equally specific, so when two rules tie, CSS uses the one written **last**. Placed after them, the Halloween colors win in both light and dark mode.
+
+### `[hidden] { display: none !important; }`
+- The countdown box starts with the `hidden` attribute. Normally that hides it, but `.countdown { display: flex }` would override that and show it anyway. This rule makes `hidden` always win.
+
+### Decorations
+- `.halloween h1` switches my name to the Creepster font. Creepster only comes in one weight, so `font-weight: 400`.
+- `.halloween h1::after { content: " 🎃" }` adds a pumpkin after my name with no HTML change, the same `::after` trick as the label lines.
+- `header::before` and `header::after` add two bat emoji. `position: absolute` with `top`/`right` places them in the header's top-right corner. `header { position: relative }` makes the header the box they're measured from.
+- `@keyframes flutter` defines an animation: bob up 8px and tilt, then back. `animation: flutter 3s ease-in-out infinite` plays it forever. The second bat's `animation-delay: -1.5s` starts it halfway through, so the two bats aren't in sync.
+- `prefers-reduced-motion` turns the animation off for people who've asked their device for less motion.
+
+### The countdown (the `<script>` at the bottom)
+- It's at the bottom so the countdown HTML already exists when the script looks for it.
+- `classList.contains("halloween")` only runs the countdown when the theme is on.
+- `document.getElementById("countdown")` finds an element by its `id`. That's why the countdown elements have ids.
+- `new Date(now.getFullYear(), 9, 31)` = midnight starting October 31st this year, in the visitor's own time zone.
+- `box.hidden = false` shows the box.
+- `tick()` does the math:
+  - `halloween - new Date()` = milliseconds left. `/ 1000` converts to seconds.
+  - `86400` = seconds in a day. `% 24`, `% 60` = the remainder, i.e. leftover hours, minutes and seconds.
+  - `padStart(2, "0")` turns `7` into `07` so the numbers don't jump around.
+  - Text inside backticks with `${...}` is a **template string**: it drops values into the text.
+  - When time's up, the box switches to "Happy Halloween!" and `clearInterval(timer)` stops the clock.
+- `setInterval(tick, 1000)` runs `tick` every 1000 ms (1 second). `tick()` also runs once right away so the box isn't empty for the first second.
+- **Controls analogy:** `setInterval` is like a timed interrupt that fires every second.
+
+### Testing it outside October
+Temporarily change the `9` in the `<head>` script to the current month's number (remember, starting at 0) and refresh. Leave the `9` in `new Date(now.getFullYear(), 9, 31)` alone, since that's the date being counted down to. After Halloween, the box shows "Happy Halloween!" instead. Change it back before committing.
 
 ---
 
